@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.example.instagram.Post;
 import com.example.instagram.PostsAdapter;
+import com.example.instagram.ProfilePostsAdapter;
 import com.example.instagram.R;
 import com.example.instagram.helpers.EndlessRecyclerViewScrollListener;
 import com.parse.FindCallback;
@@ -49,6 +51,8 @@ public class ProfileFragment extends PostsFragment {
     public static final String TAG = "ProfileFragment";
     // PICK_PHOTO_CODE is a constant integer
     public final static int PICK_PHOTO_CODE = 1046;
+
+    ProfilePostsAdapter adapter;
 
     ParseUser user;
 
@@ -81,10 +85,11 @@ public class ProfileFragment extends PostsFragment {
 
         String userId = user.getObjectId();
         String currentUserId = ParseUser.getCurrentUser().getObjectId();
+        ParseFile profileImage = (ParseFile) user.get("profileImage");
         if(userId.equals(currentUserId)) {
-            ParseFile profileImage = (ParseFile) user.get("profileImage");
+
             if (profileImage != null) {
-                Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
+
                 btnUpload.setText("Change profile image");
             } else {
                 btnUpload.setText("Add a profile image");
@@ -99,6 +104,8 @@ public class ProfileFragment extends PostsFragment {
         } else {
             btnUpload.setVisibility(View.GONE);
         }
+        Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
+
 
         rvPosts = view.findViewById(R.id.rvPosts);
 
@@ -106,10 +113,16 @@ public class ProfileFragment extends PostsFragment {
 
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), allPosts);
+        adapter = new ProfilePostsAdapter(getContext(), allPosts);
 
         // set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
+
+//        rvPosts.addItemDecoration(new DividerItemDecoration(getContext(),
+//                DividerItemDecoration.HORIZONTAL));
+//        rvPosts.addItemDecoration(new DividerItemDecoration(getContext(),
+//                DividerItemDecoration.VERTICAL));
+
         // set the layout manager on the recycler view
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         rvPosts.setLayoutManager(gridLayoutManager);
@@ -146,8 +159,6 @@ public class ProfileFragment extends PostsFragment {
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
-
-
     }
 
     @Override
@@ -156,7 +167,7 @@ public class ProfileFragment extends PostsFragment {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.whereEqualTo(Post.KEY_USER, user);
         // limit query to latest 20 items
         query.setLimit(20);
         // order posts by creation date (newest first)

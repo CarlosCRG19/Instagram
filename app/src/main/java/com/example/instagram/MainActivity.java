@@ -3,6 +3,7 @@ package com.example.instagram;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -37,33 +38,24 @@ import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
+// This activity is only going to serve as a navigation screen. It will host the different Fragments
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TAG = "MainActivity"; // Tag for log messages
+
+    // Object responsible of adding, removing or replacing Fragments in the stack
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
-//    // define your fragments here
-//    final Fragment fragment1 = new FirstFragment();
-//    final Fragment fragment2 = new SecondFragment();
-//    final Fragment fragment3 = new ThirdFragment();
-
-
-    public static final String TAG = "MainActivity";
-
+    // View that allows movement between primary destinations in app
     private BottomNavigationView bottomNavigationView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(getIntent().getBooleanExtra("ProfileFragment", false)){
-
-        }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -27,7 +27,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity" android:theme="@style/Theme.InstagramNoBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

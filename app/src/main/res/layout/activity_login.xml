@@ -1,33 +1,52 @@
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="16dp"
+    android:layout_margin="20dp"
+    android:layout_gravity="center"
     android:orientation="vertical"
     tools:context=".LoginActivity"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <ImageView
+        android:id="@+id/ivInstagram"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/nav_logo_whiteout" />
+
     <EditText
         android:id="@+id/etUsername"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/edittextround"
         android:ems="10"
-        android:hint="username" />
+        android:padding="10dp"
+        android:hint="Username" />
+
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="password"
+        android:background="@drawable/edittextround"
+        android:hint="Password"
+        android:padding="10dp"
         android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/btnLogin"
+        android:backgroundTint="@color/blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_weight="1"
-        android:text="Login" />
+        android:text="Log In"
+        android:textAllCaps="false" />
 
 </LinearLayout>

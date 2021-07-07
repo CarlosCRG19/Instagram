@@ -181,7 +181,9 @@ public class PostsFragment extends Fragment {
 
     protected void setOldestDate() {
         int lastIdx = adapter.getItemCount() - 1;
-        oldestDate = allPosts.get(lastIdx).getCreatedAt();
+        if(lastIdx > 0) {
+            oldestDate = allPosts.get(lastIdx).getCreatedAt();
+        }
     }
 
 
