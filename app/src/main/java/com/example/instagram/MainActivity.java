@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
         // Start the image capture intent to take photo
+        // TODO: intent.resolveActivity is null
         //if (intent.resolveActivity(getPackageManager()) != null)
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
