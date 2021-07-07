@@ -101,6 +101,7 @@ public class ComposeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 logout();
+                getActivity().finish();
             }
         });
 
@@ -156,7 +157,7 @@ public class ComposeFragment extends Fragment {
         // So as long as the result is not null, it's safe to use the intent.
         // Start the image capture intent to take photo
         // TODO: intent.resolveActivity is null
-        //if (intent.resolveActivity(getPackageManager()) != null)
+        //if (intent.resolveActivity(getContext().getPackageManager()) != null)
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 

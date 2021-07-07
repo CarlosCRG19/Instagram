@@ -32,7 +32,7 @@ import java.util.List;
 public class PostsFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
-    private RecyclerView rvPosts;
+    protected RecyclerView rvPosts;
 
     // Store a member variable for the listener
     protected EndlessRecyclerViewScrollListener scrollListener;
@@ -62,6 +62,8 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         rvPosts = view.findViewById(R.id.rvPosts);
 
         rvPosts.setAdapter(adapter);
@@ -118,7 +120,7 @@ public class PostsFragment extends Fragment {
         // include data referred by user key
         query.include(Post.KEY_USER);
         // limit query to latest 20 items
-        query.setLimit(3);
+        query.setLimit(20);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts
@@ -150,7 +152,7 @@ public class PostsFragment extends Fragment {
         // include data referred by user key
         query.include(Post.KEY_USER);
         // limit query to latest 20 items
-        query.setLimit(3);
+        query.setLimit(20);
         query.whereLessThan("createdAt", oldestDate);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
