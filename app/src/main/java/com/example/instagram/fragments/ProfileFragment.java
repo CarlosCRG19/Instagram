@@ -50,11 +50,17 @@ public class ProfileFragment extends PostsFragment {
     // PICK_PHOTO_CODE is a constant integer
     public final static int PICK_PHOTO_CODE = 1046;
 
-    ParseUser currentUser;
+    ParseUser user;
 
     ImageView ivProfile;
     TextView tvUsername;
     Button btnUpload;
+
+    public ProfileFragment() {}
+
+    public ProfileFragment(ParseUser user) {
+        this.user = user;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,29 +73,32 @@ public class ProfileFragment extends PostsFragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        currentUser = ParseUser.getCurrentUser();
-
         ivProfile = view.findViewById(R.id.ivProfile);
 
         btnUpload = view.findViewById(R.id.btnUpload);
-
         tvUsername = view.findViewById(R.id.tvUsername);
-        tvUsername.setText(currentUser.getUsername());
+        tvUsername.setText(user.getUsername());
 
-        ParseFile profileImage = (ParseFile) currentUser.get("profileImage");
-        if (profileImage != null) {
-            Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
-            btnUpload.setText("Change profile image");
-        } else {
-            btnUpload.setText("Add a profile image");
-        }
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPickPhoto(v);
+        String userId = user.getObjectId();
+        String currentUserId = ParseUser.getCurrentUser().getObjectId();
+        if(userId.equals(currentUserId)) {
+            ParseFile profileImage = (ParseFile) user.get("profileImage");
+            if (profileImage != null) {
+                Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
+                btnUpload.setText("Change profile image");
+            } else {
+                btnUpload.setText("Add a profile image");
             }
-        });
+
+            btnUpload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onPickPhoto(v);
+                }
+            });
+        } else {
+            btnUpload.setVisibility(View.GONE);
+        }
 
         rvPosts = view.findViewById(R.id.rvPosts);
 
@@ -260,8 +269,8 @@ public class ProfileFragment extends PostsFragment {
 
             ParseFile newProfileImage = new ParseFile("profile.png", byteArray);
 
-            currentUser.put("profileImage", newProfileImage);
-            currentUser.saveInBackground(new SaveCallback() {
+            user.put("profileImage", newProfileImage);
+            user.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e != null) {

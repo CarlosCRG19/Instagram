@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.instagram.FeedActivity;
@@ -46,6 +47,7 @@ public class ComposeFragment extends Fragment {
 
     public static final String TAG = "Compose Fragment";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    public ProgressBar pbSubmit;
     private Button btnLogout, btnFeed , btnCaptureImage, btnSubmit;
     private ImageView ivPostImage;
     private EditText etDescription;
@@ -67,6 +69,7 @@ public class ComposeFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        pbSubmit = view.findViewById(R.id.pbSubmit);
         etDescription = view.findViewById(R.id.etDescription);
         ivPostImage = view.findViewById(R.id.ivPostImage);
 
@@ -123,6 +126,7 @@ public class ComposeFragment extends Fragment {
 
 
     private void savePost(String description, ParseUser currentUser, File photoFile) {
+        pbSubmit.setVisibility(ProgressBar.VISIBLE);
         Post post = new Post();
         post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
@@ -133,8 +137,11 @@ public class ComposeFragment extends Fragment {
                 if(e != null) {
                     Log.e(TAG, "Error while saving", e);
                     Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 Log.i(TAG, "Post save was successful!");
+                Toast.makeText(getContext(), "Post submitted!", Toast.LENGTH_SHORT).show();
+                pbSubmit.setVisibility(ProgressBar.INVISIBLE);
                 etDescription.setText("");
                 ivPostImage.setImageResource(0);
             }
@@ -192,7 +199,4 @@ public class ComposeFragment extends Fragment {
             }
         }
     }
-
-
-
 }

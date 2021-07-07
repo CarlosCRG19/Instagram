@@ -1,9 +1,11 @@
 package com.example.instagram;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagram.fragments.ProfileFragment;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
@@ -20,6 +23,7 @@ import java.util.Date;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    private LinearLayout llProfile;
     private TextView tvUsername;
     private ImageView ivImage;
     private TextView tvDescription, tvCreatedAt;
@@ -31,6 +35,7 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        llProfile = findViewById(R.id.llProfile);
         tvUsername = findViewById(R.id.tvUsername);
         ivImage = findViewById(R.id.ivImage);
         tvDescription = findViewById(R.id.tvDescription);
@@ -48,6 +53,17 @@ public class DetailsActivity extends AppCompatActivity {
         if (image != null) {
             Glide.with(this).load(image.getUrl()).into(ivImage);
         }
+
+        llProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(DetailsActivity.this, MainActivity.class);
+                i.putExtra("User", post.getUser());
+                i.putExtra("ProfileFragment", true);
+                startActivity(i);
+            }
+        });
+
 
 
     }
