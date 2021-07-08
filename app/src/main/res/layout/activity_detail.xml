@@ -45,6 +45,7 @@
         android:layout_below="@+id/ivImage"
         tools:text="trying to look hipster" />
 
+
     <TextView
         android:id="@+id/tvCreatedAt"
         android:layout_width="match_parent"
@@ -53,13 +54,30 @@
         android:layout_below="@+id/tvDescription"
         tools:text="an hour ago" />
 
+    <Button
+        android:id="@+id/btnLike"
+        android:layout_below="@+id/tvCreatedAt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ufi_heart_icon"/>
+
+
+    <TextView
+        android:id="@+id/tvLikesCount"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/btnLike"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/btnLike"
+        android:textSize="20dp"
+        tools:text="0" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
-        android:layout_below="@+id/tvCreatedAt"
+        android:layout_below="@+id/btnLike"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-
 
     <Button
         android:id="@+id/btnComment"

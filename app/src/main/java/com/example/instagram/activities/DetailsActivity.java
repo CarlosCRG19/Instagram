@@ -20,9 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.instagram.adapters.CommentsAdapter;
 import com.example.instagram.models.Comment;
+import com.example.instagram.models.Like;
 import com.example.instagram.models.Post;
 import com.example.instagram.R;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -40,14 +44,16 @@ import java.util.List;
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "DetailsActivity";
+    Like userLike;
     private LinearLayout llProfile;
     private TextView tvUsername;
     private ImageView ivImage;
-    private TextView tvDescription, tvCreatedAt;
+    private TextView tvDescription, tvCreatedAt, tvLikesCount;
     private EditText etComment;
-    private Button btnComment;
+    private Button btnComment, btnLike;
     private List<Comment> allComments;
     private RecyclerView rvComments;
+    private int likesCount;
 
     CommentsAdapter adapter;
 
@@ -65,6 +71,7 @@ public class DetailsActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.tvUsername);
         ivImage = findViewById(R.id.ivImage);
         tvDescription = findViewById(R.id.tvDescription);
+        tvLikesCount = findViewById(R.id.tvLikesCount);
         tvCreatedAt = findViewById(R.id.tvCreatedAt);
         etComment = findViewById(R.id.etComment);
 
@@ -74,6 +81,9 @@ public class DetailsActivity extends AppCompatActivity {
         Date createdAt = post.getCreatedAt();
         String timeAgo = Post.calculateTimeAgo(createdAt);
         tvCreatedAt.setText(timeAgo);
+
+        likesCount = post.getLikesCount();
+        tvLikesCount.setText(String.valueOf(likesCount));
 
         btnComment = findViewById(R.id.btnComment);
         btnComment.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +122,81 @@ public class DetailsActivity extends AppCompatActivity {
 
         queryComments();
 
+        btnLike = findViewById(R.id.btnLike);
+
+        // INCLUDE CURRENT USER
+        isUserLiked(post, ParseUser.getCurrentUser());
+
+        btnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userLike != null) {
+                        userLike.deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e != null) {
+                                    Log.e(TAG, "Error while saving", e);
+                                    Toast.makeText(DetailsActivity.this, "Error while unliking!", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                post.decrementLikesCount();
+                                post.saveInBackground();
+                                likesCount -= 1;
+                                tvLikesCount.setText(String.valueOf(likesCount));
+                                userLike = null;
+                                btnLike.setBackgroundResource(R.drawable.ufi_heart);
+                                Toast.makeText(DetailsActivity.this, "Post unliked!" , Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                } else {
+                    ParseUser currentUser = ParseUser.getCurrentUser();
+                    saveLike(post, currentUser);
+                    btnLike.setBackgroundResource(R.drawable.ufi_heart_active);
+                }
+
+            }
+        });
+
+    }
+
+    private void isUserLiked(Post post, ParseUser currentUser) {
+        ParseQuery<Like> query = ParseQuery.getQuery(Like.class);
+        query.whereEqualTo("post", post);
+        query.whereEqualTo("user", currentUser);
+        query.getFirstInBackground(new GetCallback<Like>() {
+            @Override
+            public void done(Like foundLike, ParseException e) {
+                if(e != null) {
+                    btnLike.setBackgroundResource(R.drawable.ufi_heart);
+                    return;
+                }
+                btnLike.setBackgroundResource(R.drawable.ufi_heart_active);
+                userLike = foundLike;
+            }
+        });
+    }
+
+    private void saveLike(Post post, ParseUser currentUser) {
+        Like like = new Like();
+        like.setPost(post);
+        like.setUser(currentUser);
+        like.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) {
+                    Log.e(TAG, "Error while saving", e);
+                    Toast.makeText(DetailsActivity.this, "Error while saving!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                userLike = like;
+                post.incrementLikesCount();
+                post.saveInBackground();
+                likesCount += 1;
+                tvLikesCount.setText(String.valueOf(likesCount));
+                Toast.makeText(DetailsActivity.this, "Post liked!" , Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void saveComment(Post post, String body, ParseUser currentUser) {

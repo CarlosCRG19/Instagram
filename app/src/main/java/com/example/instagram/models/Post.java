@@ -17,6 +17,10 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
 
+    public int getLikesCount() { return getInt("likes_count"); }
+    public void incrementLikesCount() { increment("likes_count"); }
+    public void decrementLikesCount() { increment("likes_count", -1); }
+
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
     }
