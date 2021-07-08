@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <queries>
+
+        <!-- Gallery -->
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+        </intent>
+
         <!-- Camera -->
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -19,6 +25,7 @@
         <intent>
             <action android:name="android.intent.action.GET_CONTENT" />
         </intent>
+
     </queries>
 
     <application
@@ -48,7 +55,7 @@
         </activity>
         <activity android:name=".activities.MainActivity"/>
         <activity android:name=".FeedActivity"/>
-        <activity android:name=".activities.DetailsActivity"/>
+        <activity android:name=".activities.DetailsActivity"  android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

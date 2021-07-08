@@ -108,22 +108,7 @@ public class ComposeFragment extends Fragment {
                 savePost(description, currentUser, photoFile);
             }
         });
-
-        btnLogout = view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-                getActivity().finish();
-            }
-        });
-
     }
-
-    public void logout() {
-        ParseUser.logOut();
-    }
-
 
     private void savePost(String description, ParseUser currentUser, ParseFile photoFile) {
         pbSubmit.setVisibility(ProgressBar.VISIBLE);

@@ -2,6 +2,7 @@ package com.example.instagram.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +92,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             llProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("user", post.getUser());
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    profileFragment.setArguments(bundle);
                     ((MainActivity) context).getSupportFragmentManager().beginTransaction()
                             .replace(R.id.flContainer, profileFragment, "Posts")
                             .addToBackStack(null)

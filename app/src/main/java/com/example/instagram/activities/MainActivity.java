@@ -31,6 +31,7 @@ import com.example.instagram.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -38,6 +39,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 // This activity is only going to serve as a navigation screen. It will host the different Fragments
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -71,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new ComposeFragment();
                         break;
                     case R.id.action_profile:
-                        fragment = new ProfileFragment(ParseUser.getCurrentUser());
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("user", currentUser);
+                        fragment = new ProfileFragment();
+                        fragment.setArguments(bundle);
                         break;
                     default:
                         fragment = new PostsFragment();
@@ -82,6 +89,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+        // Receiving intent from details
+        if (getIntent().getBooleanExtra("ProfileFragment", false)) {
+            ParseUser user = (ParseUser) getIntent().getParcelableExtra("user");
+            Fragment fragment = new ProfileFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("user", user);
+            fragment.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+
+        }
+
+
     }
 
 }

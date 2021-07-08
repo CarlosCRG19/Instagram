@@ -7,16 +7,6 @@
     tools:context=".fragments.ComposeFragment"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnFeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="12dp"
-        android:layout_gravity="end"
-        android:text="Feed" />
 
     <EditText
         android:id="@+id/etDescription"
@@ -67,16 +57,5 @@
         android:visibility="invisible"
         style="?android:attr/progressBarStyleHorizontal"
         android:max="100" />
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="end"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="12dp"
-        android:text="Logout" />
 
 </LinearLayout>

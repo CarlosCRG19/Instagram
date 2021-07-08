@@ -53,18 +53,19 @@ public class ProfileFragment extends PostsFragment {
 
     ImageView ivProfile;
     TextView tvUsername;
-    Button btnUpload;
+    Button btnUpload, btnLogout;
 
     public ProfileFragment() {}
-
-    public ProfileFragment(ParseUser user) {
-        this.user = user;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Bundle bundle = this.getArguments();
+        if(bundle != null) {
+            user = bundle.getParcelable("user");
+        }
+
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -78,6 +79,15 @@ public class ProfileFragment extends PostsFragment {
         tvUsername = view.findViewById(R.id.tvUsername);
         tvUsername.setText(user.getUsername());
 
+        btnLogout = view.findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+                getActivity().finish();
+            }
+        });
+
         String userId = user.getObjectId();
         String currentUserId = ParseUser.getCurrentUser().getObjectId();
         ParseFile profileImage = (ParseFile) user.get("profileImage");
@@ -85,7 +95,7 @@ public class ProfileFragment extends PostsFragment {
 
             if (profileImage != null) {
 
-                btnUpload.setText("Change profile image");
+                btnUpload.setText("Change PP");
             } else {
                 btnUpload.setText("Add a profile image");
             }
@@ -97,6 +107,7 @@ public class ProfileFragment extends PostsFragment {
                 }
             });
         } else {
+            btnLogout.setVisibility(View.GONE);
             btnUpload.setVisibility(View.GONE);
         }
         Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
@@ -154,6 +165,10 @@ public class ProfileFragment extends PostsFragment {
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
+    }
+
+    public void logout() {
+        ParseUser.logOut();
     }
 
     @Override

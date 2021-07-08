@@ -100,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(DetailsActivity.this, MainActivity.class);
-                i.putExtra("User", post.getUser());
+                i.putExtra("user", post.getUser());
                 i.putExtra("ProfileFragment", true);
                 startActivity(i);
             }
@@ -129,6 +129,7 @@ public class DetailsActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "Comment save was successfully!");
+                queryComments();
                 Toast.makeText(DetailsActivity.this, "Comment submitted!" + comment.getUser().getUsername(), Toast.LENGTH_SHORT).show();
                 etComment.setText("");
             }
@@ -159,6 +160,7 @@ public class DetailsActivity extends AppCompatActivity {
                 }
 
                 // save received posts to list and notify adapter of new data
+                allComments.clear();
                 allComments.addAll(comments);
                 adapter.notifyDataSetChanged();
             }
