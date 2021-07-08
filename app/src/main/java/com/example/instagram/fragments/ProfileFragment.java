@@ -228,14 +228,15 @@ public class ProfileFragment extends PostsFragment {
     // Trigger gallery selection for a photo
     public void onPickPhoto(View view) {
         // Create intent for picking a photo from the gallery
-        Intent intent = new Intent(Intent.ACTION_PICK,
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
-        //if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Bring up gallery to select a photo
             startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
 
     }
 
