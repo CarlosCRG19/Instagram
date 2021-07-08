@@ -1,4 +1,4 @@
-package com.example.instagram;
+package com.example.instagram.models;
 
 import android.util.Log;
 
@@ -9,28 +9,20 @@ import com.parse.ParseUser;
 
 import java.util.Date;
 
-@ParseClassName("Post")
-public class Post extends ParseObject {
+@ParseClassName("Comment")
+public class Comment extends ParseObject {
 
-    public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_IMAGE = "image";
+    public static final String KEY_BODY = "body";
     public static final String KEY_USER = "user";
+    public static final String KEY_POST = "post";
 
-    public String getDescription() {
-        return getString(KEY_DESCRIPTION);
-    }
+    public void setPost(Post post){ put(KEY_POST, post); }
+    public Post getPost() {return (Post) get(KEY_POST); }
 
-    public void setDescription(String description){
-        put(KEY_DESCRIPTION, description);
-    }
 
-    public ParseFile getImage() {
-        return getParseFile(KEY_IMAGE);
-    }
+    public String getBody() { return getString(KEY_BODY); }
 
-    public void setImage(ParseFile parseFile) {
-        put(KEY_IMAGE, parseFile);
-    }
+    public void setBody(String body) { put(KEY_BODY, body); }
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);

@@ -53,4 +53,34 @@
         android:layout_below="@+id/tvDescription"
         tools:text="an hour ago" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvComments"
+        android:layout_below="@+id/tvCreatedAt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_below="@id/rvComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etComment"
+            android:layout_gravity="bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Write a comment" />
+
+        <Button
+            android:id="@+id/btnComment"
+            android:layout_gravity="bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Comment" />
+
+    </LinearLayout>
+
+
 </RelativeLayout>

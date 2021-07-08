@@ -25,11 +25,28 @@
         android:ems="10"
         android:hint="Description..." />
 
-    <Button
-        android:id="@+id/btnCapture"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Take Picture" />
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCapture"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Take Picture" />
+
+        <Button
+            android:id="@+id/btnMedia"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Media" />
+
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/ivPostImage"

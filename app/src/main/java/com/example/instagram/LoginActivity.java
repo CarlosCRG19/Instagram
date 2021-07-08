@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.instagram.activities.MainActivity;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;

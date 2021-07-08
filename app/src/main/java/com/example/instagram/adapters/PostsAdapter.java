@@ -1,8 +1,7 @@
-package com.example.instagram;
+package com.example.instagram.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.service.controls.templates.ControlTemplate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagram.R;
+import com.example.instagram.activities.DetailsActivity;
+import com.example.instagram.activities.MainActivity;
 import com.example.instagram.fragments.ProfileFragment;
+import com.example.instagram.models.Post;
 import com.parse.ParseFile;
 
-import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.Date;
