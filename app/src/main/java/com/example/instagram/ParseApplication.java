@@ -13,13 +13,15 @@ public class ParseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // Register all classes for objects before initializing parse
         ParseObject.registerSubclass(Like.class);
         ParseObject.registerSubclass(Post.class);
         ParseObject.registerSubclass(Comment.class);
 
+        // Connect to database using secret keys
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("5fMlL5b2J8lSQIxItFrHzx8A84i75LBOi1ZLmuja")
-                .clientKey("45kX5He0CGz6I9a5caVCjUuIXAHr0ZstKkrq8wSl")
+                .applicationId(getString(R.string.APPLICATION_ID)) // Get keys from secrets
+                .clientKey(getString(R.string.CLIENT_KEY))
                 .server("https://parseapi.back4app.com")
                 .build()
         );

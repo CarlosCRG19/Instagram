@@ -20,6 +20,4 @@ public class BitmapScaler
         float factor = height / (float) b.getHeight();
         return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
     }
-
-    // ...
 }

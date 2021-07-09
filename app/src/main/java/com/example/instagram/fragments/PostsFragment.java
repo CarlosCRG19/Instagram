@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.instagram.adapters.CommentsAdapter;
+import com.example.instagram.models.Comment;
 import com.example.instagram.models.Post;
 import com.example.instagram.adapters.PostsAdapter;
 import com.example.instagram.R;
@@ -32,20 +34,27 @@ import java.util.List;
 
 public class PostsFragment extends Fragment {
 
-    public static final String TAG = "PostsFragment";
-    protected RecyclerView rvPosts;
+    // MEMBER VARIABLES
 
-    // Store a member variable for the listener
-    protected EndlessRecyclerViewScrollListener scrollListener;
-    protected Date oldestDate;
-    protected PostsAdapter adapter;
-    protected List<Post> allPosts;
-    protected SwipeRefreshLayout swipeContainer;
+    public static final String TAG = "PostsFragment"; // TAG for log messages
 
-    public PostsFragment() {
-        // Required empty public constructor
-    }
+    RecyclerView rvPosts; // Viewgroup to populate with Posts
 
+    // HELPERS
+    SwipeRefreshLayout swipeContainer; // handles refresh action
+    EndlessRecyclerViewScrollListener scrollListener; // handles endless scrolling (adds new posts to the RV)
+
+    Date oldestDate; // Member variable to store the date of the oldest post (this is used in the query for new posts when the user scrolls)
+
+    // Posts Code
+    List<Post> allPosts; // model to save posts
+    PostsAdapter adapter; // class to bind the data with views
+    LinearLayoutManager linearLayoutManager; // manager for RV (also required for scrollListener)
+
+    // Required empty public constructor
+    public PostsFragment() {}
+
+    // REQUIRED METHODS
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,35 +72,38 @@ public class PostsFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        rvPosts = view.findViewById(R.id.rvPosts);
-
-        rvPosts.setAdapter(adapter);
-
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
 
+        // Setup comments recycler view
+        rvPosts = view.findViewById(R.id.rvPosts);
         // set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
-        // set the layout manager on the recycler view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        // Set layout manager on the RV
+        linearLayoutManager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(linearLayoutManager);
-        // query posts from Parstagram
+        // query posts from database
         queryPosts();
 
+        // Enable refresh feature
+        setRefreshFeature(view);
+        // Enable endless scrolling
+        setEndlessScrollingFeature();
+    }
+
+    // FEATURES METHODS
+
+    // Lets the user refresh the main feed swiping down on the RV
+    protected void setRefreshFeature(View view) {
+        // Get view from layout
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                // TODO: BUG HERE, IMAGES ARE BEING REPEATED
-                adapter.clear();
+                // Make query to get newest posts
                 queryPosts();
-                swipeContainer.setRefreshing(false);
             }
         });
         // Configure the refreshing colors
@@ -99,28 +111,32 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
 
+    // Enables queries for most posts while the user is scrolling
+    private void setEndlessScrollingFeature() {
+        // Create new instance of scroll listener
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
                 queryMorePosts();
             }
         };
         // Adds the scroll listener to RecyclerView
         rvPosts.addOnScrollListener(scrollListener);
-
-
     }
 
+    // QUERY METHODS
+
+    // Gets first n posts from database
     protected void queryPosts() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
-        // limit query to latest 20 items
-        query.setLimit(20);
+        // limit query to latest 5 items
+        query.setLimit(5);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts
@@ -137,22 +153,29 @@ public class PostsFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-
-                // save received posts to list and notify adapter of new data
+                // Clear the list of all posts
+                allPosts.clear();
+                // Save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
+                // Hide refreshing icon
+                swipeContainer.setRefreshing(false);
+                // Set new oldest date
                 setOldestDate();
+
             }
         });
     }
 
+    // Gets n more posts older than current oldest post
     protected void queryMorePosts() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
-        // limit query to latest 20 items
-        query.setLimit(20);
+        // limit query to 5 items
+        query.setLimit(5);
+        // get only posts that are older than the current oldest post (refer to oldestDate)
         query.whereLessThan("createdAt", oldestDate);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
@@ -162,29 +185,28 @@ public class PostsFragment extends Fragment {
             public void done(List<Post> posts, ParseException e) {
                 // check for errors
                 if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
+                    Log.e(TAG, "Issue with getting more posts", e);
                     return;
                 }
-
-                // for debugging purposes let's print every post description to logcat
-                for (Post post : posts) {
-                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
-
-                // save received posts to list and notify adapter of new data
+                // Save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
+                // Set new oldest date
                 setOldestDate();
             }
         });
     }
 
+    // OTHER METHODS
+
+    // Gets the date of the oldest post (last one on list) and saves value for it to be used in queryMorePosts
     protected void setOldestDate() {
+        // Get index for last item
         int lastIdx = adapter.getItemCount() - 1;
+        // Check that index is greater than zero
         if(lastIdx > 0) {
+            // save oldest date
             oldestDate = allPosts.get(lastIdx).getCreatedAt();
         }
     }
-
-
 }

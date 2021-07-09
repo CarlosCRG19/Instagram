@@ -1,4 +1,4 @@
-package com.example.instagram;
+package com.example.instagram.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.instagram.activities.MainActivity;
+import com.example.instagram.R;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -21,70 +21,74 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static String TAG = "LoginActivity";
-    private EditText etUsername;
-    private EditText etPassword;
-    private Button btnLogin;
+    public static String TAG = "LoginActivity"; // TAG for log messages
+
+    // VIEWS
+    Button btnLogin;
+    EditText etUsername,  etPassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_login);
 
+        // Check whether user is already logged in
         if (ParseUser.getCurrentSessionToken() != null) {
             goMainActivity();
         }
 
+        // Get views from layout
+        setViews();
+        // Set click listener for btnLogin
+        setLoginListener();
+    }
+
+    // VIEWS METHODS
+
+    // Assign views on layout to variables
+    private void setViews() {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+    }
+
+    // Set click listener for login
+    private void setLoginListener(){
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick login button");
+                Log.i(TAG, "Login Button clicked");
+                // Get content on both EditTexts
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                queryCredentials(username);
+                // Login user
                 loginUser(username, password);
             }
         });
     }
 
+    // Tries to login user with username and password
     private void loginUser(String username, String password) {
         Log.i(TAG, "Attempting to login user " + username + password);
+        // Execute login async call
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
+                // Check for errors
                 if(e != null) {
-                    Toast.makeText(LoginActivity.this, "Issue with login!", Toast.LENGTH_LONG ).show();
                     Log.e(TAG, "Issue with login", e);
+                    Toast.makeText(LoginActivity.this, "Issue with login!", Toast.LENGTH_LONG ).show();
                     return;
                 }
-                goMainActivity();
+                // If login was successful go to main activity
                 Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                goMainActivity();
             }
         });
     }
 
-    public void queryCredentials(String username) {
-        ParseQuery<ParseUser> queryuserlist = ParseUser.getQuery();
-        queryuserlist.whereEqualTo("username", username);
-        /*try {
-            //attempt to find a user with the specified credentials.
-            return (queryuserlist.count() != 0) ? true : false;
-        } catch (ParseException e) {
-            return false;
-        }*/
-        queryuserlist.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> objects, ParseException e) {
-                if(e == null){
-                    Log.d(TAG, "objects size = " + objects.size());
-                }
-            }
-        });
-    }
-
+    // Uses intent to pass to MainActivity and ends LoginActivity
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);

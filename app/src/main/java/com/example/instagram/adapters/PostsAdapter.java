@@ -36,6 +36,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         this.posts = posts;
     }
 
+    // MANDATORY METHODS
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,80 +56,99 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return posts.size();
     }
 
+    // CUSTOM METHODS
+
+    // Clears list and notifies changes to adapter
+    public void clear() {
+        posts.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a complete list of items
+    public void addAll(List<Post> list) {
+        posts.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    // VIEW HOLDER CLASS (uses interface so that every row in the RV can listen to clicks and change to DetailsActivity)
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private LinearLayout llProfile;
-        private TextView tvUsername;
+        public static final String USER_KEY = "user"; // key to receive and send users from messaging objects
+
+        // VIEWS
         private ImageView ivImage, ivProfile;
-        private TextView tvDescription, tvCreatedAt;
+        private TextView tvUsername, tvDescription, tvCreatedAt;
+        private LinearLayout llProfile; // Layout that contains author's profile pic and username (when this is clicked, ProfileFragment is launched)
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-            ivImage = itemView.findViewById(R.id.ivImage);
+            // Get views from layout
+            llProfile = itemView.findViewById(R.id.llProfile);
             ivProfile = itemView.findViewById(R.id.ivProfile);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
+
+            ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
-            llProfile = itemView.findViewById(R.id.llProfile);
 
+            // Set click listener
             itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION){
-                Post currentPost = posts.get(position);
-                Intent i = new Intent(context, DetailsActivity.class);
-                i.putExtra(Post.class.getSimpleName(), Parcels.wrap(currentPost));
-                context.startActivity(i);
-            }
-        }
-
+        // Connects data to views
         public void bind(Post post) {
             // Bind the post data to the view elements
-            tvDescription.setText(post.getDescription());
+
+            // User data
+            ParseFile profileImage = (ParseFile) post.getUser().get("profileImage");
+            Glide.with(context).load(profileImage.getUrl()).into(ivProfile);
             tvUsername.setText(post.getUser().getUsername());
 
+            // Post data
+            ParseFile postImage = post.getImage();
+            // Verify that post has an image
+            if (postImage != null) {
+                Glide.with(context).load(postImage.getUrl()).into(ivImage);
+            }
+            tvDescription.setText(post.getDescription());
+            tvCreatedAt.setText(Post.calculateTimeAgo(post.getCreatedAt()));
+
+            // Create listener to lauch ProfileFragment if username or profile pic is clicked
             llProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // Setup bundle to pass user
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable("user", post.getUser());
+                    bundle.putParcelable(USER_KEY, post.getUser());
+                    // Create new fragment and set args
                     ProfileFragment profileFragment = new ProfileFragment();
                     profileFragment.setArguments(bundle);
+                    // Change to ProfileFragment from MainActivity
                     ((MainActivity) context).getSupportFragmentManager().beginTransaction()
                             .replace(R.id.flContainer, profileFragment, "Posts")
                             .addToBackStack(null)
                             .commit();
                 }
             });
+        }
 
-            Date createdAt = post.getCreatedAt();
-            tvCreatedAt.setText(Post.calculateTimeAgo(createdAt));
-
-            ParseFile profileImage = (ParseFile) post.getUser().get("profileImage");
-            if(profileImage != null) {
-                Glide.with(context).load(profileImage.getUrl()).into(ivProfile);
-            }
-
-            ParseFile image = post.getImage();
-            if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivImage);
+        // When a row is clicked (not on authors username or pp), a detail view for that specific post is launched
+        @Override
+        public void onClick(View v) {
+            // Get position of adapter
+            int position = getAdapterPosition();
+            // Check if position exists on RV
+            if(position != RecyclerView.NO_POSITION){
+                // Get post from model
+                Post currentPost = posts.get(position);
+                // Create an intent to start DetailsActivity and pass info
+                Intent i = new Intent(context, DetailsActivity.class);
+                // User Parcel to wrap and pass data into the intent as an extra
+                i.putExtra(Post.class.getSimpleName(), Parcels.wrap(currentPost));
+                // Start new activity
+                context.startActivity(i);
             }
         }
 
     }
-
-    public void clear() {
-        posts.clear();
-        notifyDataSetChanged();
-    }
-
-    // Add a list of items -- change to type used
-    public void addAll(List<Post> list) {
-        posts.addAll(list);
-        notifyDataSetChanged();
-    }
-
 }

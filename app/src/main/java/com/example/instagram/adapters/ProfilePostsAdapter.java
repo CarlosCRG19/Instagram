@@ -20,8 +20,10 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+// Binds data to post that appear on a ProfileFragment (Just the image appears)
 public class ProfilePostsAdapter extends RecyclerView.Adapter<ProfilePostsAdapter.ViewHolder>{
 
+    // FIELDS
     private Context context;
     private List<Post> posts;
 
@@ -30,10 +32,12 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<ProfilePostsAdapte
         this.posts = posts;
     }
 
+    // MANDATORY METHODS
+
     @NonNull
     @Override
     public ProfilePostsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.profile_post, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.profile_post, parent, false); // user profile_post to inflate each row
         return new ProfilePostsAdapter.ViewHolder(view);
     }
 
@@ -49,36 +53,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<ProfilePostsAdapte
         return posts.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private ImageView ivImage;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivImage = itemView.findViewById(R.id.ivImage);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION){
-                Post currentPost = posts.get(position);
-                Intent i = new Intent(context, DetailsActivity.class);
-                i.putExtra(Post.class.getSimpleName(), Parcels.wrap(currentPost));
-                context.startActivity(i);
-            }
-        }
-
-        public void bind(Post post) {
-            // Bind the post data to the view elements
-            ParseFile image = post.getImage();
-            if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivImage);
-            }
-        }
-
-    }
+    // CUSTOM METHODS
 
     public void clear() {
         posts.clear();
@@ -91,5 +66,48 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<ProfilePostsAdapte
         notifyDataSetChanged();
     }
 
+    // VIEWHOLDER (implements an interface to handle clicks)
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        // VIEWS
+        private ImageView ivImage;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            // Get image view from layout
+            ivImage = itemView.findViewById(R.id.ivImage);
+            // Create a listener that applies to the whole viewholder
+            itemView.setOnClickListener(this);
+        }
+
+        // Connect post data to the view
+        public void bind(Post post) {
+            // Get post image
+            ParseFile postImage = post.getImage();
+            // Check that image is not null
+            if (postImage != null) {
+                // Use glide to embed image
+                Glide.with(context).load(postImage.getUrl()).into(ivImage);
+            }
+        }
+
+        // If the post is clicked, a detail view is launched in which the user can see specific details for this post
+        @Override
+        public void onClick(View v) {
+            // Get position of adapter
+            int position = getAdapterPosition();
+            // Check if position exists on RV
+            if(position != RecyclerView.NO_POSITION){
+                // Get post from model
+                Post currentPost = posts.get(position);
+                // Create an intent to start DetailsActivity and pass info
+                Intent i = new Intent(context, DetailsActivity.class);
+                // User Parcel to wrap and pass data into the intent as an extra
+                i.putExtra(Post.class.getSimpleName(), Parcels.wrap(currentPost));
+                // Start new activity
+                context.startActivity(i);
+            }
+        }
+
+    }
 }
