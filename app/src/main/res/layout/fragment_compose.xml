@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/background_color"
     android:layout_height="match_parent"
     tools:context=".fragments.ComposeFragment"
     android:orientation="vertical">
@@ -59,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_bg"
-        android:backgroundTint="@color/gray"
+        android:backgroundTint="@color/btn_color"
         android:orientation="horizontal">
 
         <TextView
@@ -67,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_semibold"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color_2"
             android:text="Take Picture"
             android:textAllCaps="false"
             android:layout_marginStart="11dp"
@@ -92,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_bg"
-        android:backgroundTint="@color/gray"
+        android:backgroundTint="@color/btn_color"
         android:orientation="horizontal">
 
         <TextView
@@ -100,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_semibold"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color_2"
             android:text="Select Media"
             android:textAllCaps="false"
             android:layout_marginStart="11dp"
@@ -112,7 +113,7 @@
             android:layout_width="35dp"
             android:layout_marginEnd="5dp"
             android:layout_height="35dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/background_color"
             android:layout_weight="1"
             android:src="@drawable/ic_gallery" />
 
@@ -132,8 +133,8 @@
         android:backgroundTint="@color/blue"
         android:fontFamily="@font/open_sans_bold"
         android:text="Submit"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textColor="@color/text_color_2"
+        android:textSize="14sp" />
 
 
 </RelativeLayout>

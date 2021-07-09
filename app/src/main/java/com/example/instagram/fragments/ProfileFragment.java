@@ -356,7 +356,10 @@ public class ProfileFragment extends Fragment {
                 }
             });
             // Change image on view
-            ivProfile.setImageBitmap(resizedBitmap);
+            Glide.with(getContext())
+                    .load(byteArray)
+                    .circleCrop()
+                    .into(ivProfile);
         }
     }
 

@@ -146,6 +146,7 @@ public class DetailsActivity extends AppCompatActivity {
                 i.putExtra(LAUNCH_PF_KEY, true);
                 // Start MainActivity
                 startActivity(i);
+                finish();
             }
         });
 

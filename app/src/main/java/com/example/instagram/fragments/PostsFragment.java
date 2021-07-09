@@ -109,6 +109,7 @@ public class PostsFragment extends Fragment {
             public void onRefresh() {
                 // Make query to get newest posts
                 queryPosts();
+                scrollListener.resetState(); // NOTE: This line solved a really weird problem in which, after refreshing, the recycler view lost the scroll listener. Thanks Rey for your help :)
             }
         });
         // Configure the refreshing colors
@@ -125,6 +126,7 @@ public class PostsFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
+                Log.i(TAG, "Scrolling...");
                 queryMorePosts();
             }
         };
@@ -160,6 +162,7 @@ public class PostsFragment extends Fragment {
                 }
                 // Clear the list of all posts
                 allPosts.clear();
+                adapter.clear();
                 // Save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
@@ -167,7 +170,8 @@ public class PostsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
                 // Set new oldest date
                 setOldestDate();
-
+                Log.i(TAG, oldestDate.toString());
+                // rvPosts.addOnScrollListener(scrollListener);
             }
         });
     }
@@ -193,6 +197,12 @@ public class PostsFragment extends Fragment {
                     Log.e(TAG, "Issue with getting more posts", e);
                     return;
                 }
+
+                // for debugging purposes let's print every post description to logcat
+                for (Post post : posts) {
+                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+                }
+
                 // Save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
