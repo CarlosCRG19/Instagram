@@ -138,7 +138,10 @@ public class ProfileFragment extends Fragment {
 
     private void populateViews() {
         ParseFile profileImage = (ParseFile) profileUser.get("profileImage");
-        Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
+        Glide.with(getContext())
+                .load(profileImage.getUrl())
+                .circleCrop()
+                .into(ivProfile);
         tvUsername.setText(profileUser.getUsername());
     }
 

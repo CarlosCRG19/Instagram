@@ -2,10 +2,12 @@ package com.example.instagram.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -56,11 +58,12 @@ public class DetailsActivity extends AppCompatActivity {
     ParseUser currentUser; // the user that is seeing the post (can be the same as postUser)
 
     // General Views
-    ImageView ivImage;
+    ImageView ivProfile, ivImage;
     EditText etComment;
     LinearLayout llProfile; // ivProfile and tvUsername are both inside this LL, this way, a clickListener to change to ProfileFragment can be added
     RecyclerView rvComments; // View group to populate with comments
-    Button btnLike, btnComment;
+    Button btnComment;
+    ImageButton btnLike;
     TextView tvUsername, tvDescription, tvCreatedAt, tvLikesCount;
 
     // Likes Info
@@ -113,6 +116,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void setViews() {
         // Author information
         llProfile = findViewById(R.id.llProfile);
+        ivProfile = findViewById(R.id.ivProfile);
         tvUsername = findViewById(R.id.tvUsername);
 
         // Post data
@@ -178,13 +182,20 @@ public class DetailsActivity extends AppCompatActivity {
     // Binds the post and users data into the views
     private void populateViews() {
         // Author information
+        ParseFile profileImage = (ParseFile) post.getUser().get("profileImage");
+        Glide.with(DetailsActivity.this)
+                .load(profileImage.getUrl())
+                .circleCrop()
+                .into(ivProfile);
         tvUsername.setText(postUser.getUsername());
 
         // Post data
         ParseFile postImage = post.getImage(); // Get and set image from ParseObject
         Glide.with(this).load(postImage.getUrl()).into(ivImage);
 
-        tvDescription.setText(post.getDescription()); // Fill description text
+        // Add username at the beginning of description
+        String sourceString = "<b>" + post.getUser().getUsername() + "</b>  " + post.getDescription();
+        tvDescription.setText(Html.fromHtml(sourceString, 42)); // Fill description text
         tvCreatedAt.setText(Post.calculateTimeAgo(post.getCreatedAt())); // uses static method to format the date
         tvLikesCount.setText(String.valueOf(likesCount));
     }
@@ -203,10 +214,10 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void done(Like foundLike, ParseException e) {
                 if(e != null) { // e == null when no matching object has been found
-                    btnLike.setBackgroundResource(R.drawable.ufi_heart); // set button icon to just the stroke
+                    btnLike.setBackgroundResource(R.drawable.heart_icon_stroke); // set button icon to just the stroke
                     return;
                 }
-                btnLike.setBackgroundResource(R.drawable.ufi_heart_active); // change icon to filled heart
+                btnLike.setBackgroundResource(R.drawable.heart_icon); // change icon to filled heart
                 userLike = foundLike;
             }
         });
@@ -271,7 +282,7 @@ public class DetailsActivity extends AppCompatActivity {
                 tvLikesCount.setText(String.valueOf(likesCount));
 
                 // Change button background
-                btnLike.setBackgroundResource(R.drawable.ufi_heart_active);
+                btnLike.setBackgroundResource(R.drawable.heart_icon);
 
                 // Change userLike (now it won't be null)
                 userLike = like;
@@ -304,7 +315,7 @@ public class DetailsActivity extends AppCompatActivity {
                 tvLikesCount.setText(String.valueOf(likesCount));
 
                 // Change button background
-                btnLike.setBackgroundResource(R.drawable.ufi_heart);
+                btnLike.setBackgroundResource(R.drawable.heart_icon_stroke);
 
                 userLike = null; // Even though we delete the object on the database, that does not mean that our local variable has been deleted
 

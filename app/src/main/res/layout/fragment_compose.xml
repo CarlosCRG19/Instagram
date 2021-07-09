@@ -1,61 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
     tools:context=".fragments.ComposeFragment"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:id="@+id/pbSubmit"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/blue"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tvNewPost"
+        android:layout_below="@id/pbSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/open_sans_bold"
+        android:text="New Post"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="25sp" />
 
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tvNewPost"
+        android:layout_margin="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         android:ems="10"
-        android:hint="Description..." />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnCapture"
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Take Picture" />
-
-        <Button
-            android:id="@+id/btnMedia"
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Media" />
-
-    </LinearLayout>
-
+        android:fontFamily="@font/open_sans"
+        android:hint="Write a description" />
 
     <ImageView
         android:id="@+id/ivPostImage"
+        android:layout_below="@id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:background="@color/light_gray"
         tools:srcCompat="@tools:sample/avatars"/>
 
-    <Button
+    <LinearLayout
+        android:id="@+id/llCapture"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_below="@id/ivPostImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/gray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_semibold"
+            android:textColor="@color/white"
+            android:text="Take Picture"
+            android:textAllCaps="false"
+            android:layout_marginStart="11dp"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivCamera"
+            android:padding="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/camera_ic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSelect"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_below="@id/ivPostImage"
+        android:layout_toEndOf="@+id/llCapture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/gray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_semibold"
+            android:textColor="@color/white"
+            android:text="Select Media"
+            android:textAllCaps="false"
+            android:layout_marginStart="11dp"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:padding="3dp"
+            android:layout_width="35dp"
+            android:layout_marginEnd="5dp"
+            android:layout_height="35dp"
+            android:backgroundTint="@color/white"
+            android:layout_weight="1"
+            android:src="@drawable/ic_gallery" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:layout_below="@+id/ivPostImage"
+        android:layout_alignBottom="@+id/llSelect"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toEndOf="@id/llSelect"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/open_sans_bold"
+        android:text="Submit"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
-    <ProgressBar
-        android:id="@+id/pbSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="100" />
 
-</LinearLayout>
+</RelativeLayout>

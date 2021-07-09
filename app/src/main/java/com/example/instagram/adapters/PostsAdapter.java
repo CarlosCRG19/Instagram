@@ -3,6 +3,7 @@ package com.example.instagram.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
             // User data
             ParseFile profileImage = (ParseFile) post.getUser().get("profileImage");
-            Glide.with(context).load(profileImage.getUrl()).into(ivProfile);
+            Glide.with(context)
+                    .load(profileImage.getUrl())
+                    .circleCrop()
+                    .into(ivProfile);
             tvUsername.setText(post.getUser().getUsername());
 
             // Post data
@@ -110,7 +114,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (postImage != null) {
                 Glide.with(context).load(postImage.getUrl()).into(ivImage);
             }
-            tvDescription.setText(post.getDescription());
+
+            // Add username at the beginning of description
+            String sourceString = "<b>" + post.getUser().getUsername() + "</b>  " + post.getDescription();
+            tvDescription.setText(Html.fromHtml(sourceString, 42));
             tvCreatedAt.setText(Post.calculateTimeAgo(post.getCreatedAt()));
 
             // Create listener to lauch ProfileFragment if username or profile pic is clicked

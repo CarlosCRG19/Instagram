@@ -66,22 +66,6 @@ public class MainActivity extends AppCompatActivity {
         // Get current user
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        // Check if this activity was called by DetailsActivity : this happens when user clicks on author post username or photo
-        // since MainActivity hosts ProfileFragment
-        if (getIntent().getBooleanExtra(LAUNCH_PF_KEY, false)) { // checking bool value
-            // Get user from intent
-            ParseUser user = (ParseUser) getIntent().getParcelableExtra(USER_KEY);
-            // Setup bundle to pass user as arguments
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(USER_KEY, user);
-            // Create new fragment and save arguments (this is a way of passing info from activities to fragments)
-            Fragment fragment = new ProfileFragment();
-            fragment.setArguments(bundle);
-            // Change to Profile fragment using manager
-            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-
-        }
-
         // Assign bottom navigation bar from layout
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         // Create listener for bottomNavigationView items
@@ -118,6 +102,20 @@ public class MainActivity extends AppCompatActivity {
         // Set home option as default
         bottomNavigationView.setSelectedItemId(R.id.action_home);
 
+        // Check if this activity was called by DetailsActivity : this happens when user clicks on author post username or photo
+        // since MainActivity hosts ProfileFragment
+        if (getIntent().getBooleanExtra(LAUNCH_PF_KEY, false)) { // checking bool value
+            // Get user from intent
+            ParseUser user = (ParseUser) getIntent().getParcelableExtra(USER_KEY);
+            // Setup bundle to pass user as arguments
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(USER_KEY, user);
+            // Create new fragment and save arguments (this is a way of passing info from activities to fragments)
+            Fragment fragment = new ProfileFragment();
+            fragment.setArguments(bundle);
+            // Change to Profile fragment using manager
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+        }
     }
 
 }

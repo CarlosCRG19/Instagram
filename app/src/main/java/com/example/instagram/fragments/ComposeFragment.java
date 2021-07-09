@@ -1,6 +1,7 @@
 package com.example.instagram.fragments;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
@@ -22,10 +25,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.instagram.FeedActivity;
 import com.example.instagram.models.Post;
 import com.example.instagram.R;
 import com.example.instagram.helpers.BitmapScaler;
@@ -56,7 +59,8 @@ public class ComposeFragment extends Fragment {
     // VIEWS
     ImageView ivPostImage;
     EditText etDescription;
-    Button btnCaptureImage, btnMedia, btnSubmit;
+    LinearLayout llCapture, llSelect;
+    Button btnSubmit;
     ProgressBar pbSubmit; // ProgressBar shown when post is being submitted
 
     // MEDIA FILE VARIABLES
@@ -93,26 +97,28 @@ public class ComposeFragment extends Fragment {
         etDescription = view.findViewById(R.id.etDescription);
 
         // Media action
-        btnMedia = view.findViewById(R.id.btnMedia);
-        btnCaptureImage = view.findViewById(R.id.btnCapture);
+        llCapture = view.findViewById(R.id.llCapture);
+        llSelect = view.findViewById(R.id.llSelect);
 
         // Submit action
         btnSubmit = view.findViewById(R.id.btnSubmit);
         pbSubmit = view.findViewById(R.id.pbSubmit);
+        // pbSubmit.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
+        // pbSubmit.getIndeterminateDrawable().setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(R.color.blue, BlendModeCompat.));
 
     }
 
     // Sets listeners for each button
     private void setClickListeners() {
         // Calls onPickPhoto to access media storage and pick a photo
-        btnMedia.setOnClickListener(new View.OnClickListener() {
+        llSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPickPhoto(v);
             }
         });
         // Calls launchCamera to open camera and take a picture
-        btnCaptureImage.setOnClickListener(new View.OnClickListener() {
+        llCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchCamera();

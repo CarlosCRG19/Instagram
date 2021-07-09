@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -83,6 +84,10 @@ public class PostsFragment extends Fragment {
         // Set layout manager on the RV
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(linearLayoutManager);
+        // Add divider between rows
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvPosts.getContext(),
+                linearLayoutManager.getOrientation());
+        rvPosts.addItemDecoration(dividerItemDecoration);
         // query posts from database
         queryPosts();
 

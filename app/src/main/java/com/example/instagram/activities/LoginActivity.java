@@ -16,6 +16,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     public static String TAG = "LoginActivity"; // TAG for log messages
 
     // VIEWS
-    Button btnLogin;
+    Button btnLogin, btnSignup;
     EditText etUsername,  etPassword;
 
 
@@ -42,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         setViews();
         // Set click listener for btnLogin
         setLoginListener();
+        // Set click listener for btnSignup
+        setSignUpListener();
     }
 
     // VIEWS METHODS
@@ -51,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnSignup = findViewById(R.id.btnSignup);
     }
 
     // Set click listener for login
@@ -68,6 +72,22 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Set click listener for login
+    private void setSignUpListener(){
+        btnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Signup Button clicked");
+                // Get content on both EditTexts
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+                // Login user
+                signupUser(username, password);
+            }
+        });
+    }
+
+
     // Tries to login user with username and password
     private void loginUser(String username, String password) {
         Log.i(TAG, "Attempting to login user " + username + password);
@@ -82,6 +102,29 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 // If login was successful go to main activity
+                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                goMainActivity();
+            }
+        });
+    }
+
+    // Register new user with new credentials
+    private void signupUser(String username, String password) {
+        // Create new user instance
+        ParseUser newUser = new ParseUser();
+        newUser.put("username", username);
+        newUser.put("password", password);
+        // Execute login async call
+        newUser.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(ParseException e) {
+                // Check for errors
+                if(e != null) {
+                    Log.e(TAG, "Issue trying to sign up user", e);
+                    Toast.makeText(LoginActivity.this, "Issue with signing up!", Toast.LENGTH_LONG ).show();
+                    return;
+                }
+                // If signup was successful go to main activity
                 Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                 goMainActivity();
             }

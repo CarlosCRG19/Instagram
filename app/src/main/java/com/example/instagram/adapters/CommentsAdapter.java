@@ -90,7 +90,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             // Bind the comment data to the view elements
             ParseFile profileImage = (ParseFile) comment.getUser().get("profileImage");
             if (profileImage != null) {
-                Glide.with(context).load(profileImage.getUrl()).into(ivProfile); // Use glide to embed profile image into view
+                Glide.with(context)
+                        .load(profileImage.getUrl())
+                        .circleCrop()
+                        .into(ivProfile); // Use glide to embed profile image into view
             }
             tvUsername.setText(comment.getUser().getUsername());
             tvBody.setText(comment.getBody());

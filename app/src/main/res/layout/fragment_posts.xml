@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
     tools:context=".fragments.PostsFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,8 +15,7 @@
             android:id="@+id/rvPosts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:padding="8dp" />
+            android:layout_centerInParent="true" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
