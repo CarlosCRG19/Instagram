@@ -40,7 +40,7 @@ The following **stretch** features are implemented:
 
 The following **additional** features are implemented:
 
-- [x] User can change to night mode! (Thank to Ainsley, my manager, for this great guide: https://www.geeksforgeeks.org/how-to-implement-dark-night-mode-in-android-app/)
+- [x] User can change to night mode! (Thanks to Ainsley, my manager, for this great guide: https://www.geeksforgeeks.org/how-to-implement-dark-night-mode-in-android-app/)
 - [x] User can create a post from image on the gallery 
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
