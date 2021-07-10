@@ -18,6 +18,7 @@
 
     <EditText
         android:id="@+id/etUsername"
+        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -26,7 +27,7 @@
         android:background="@drawable/edittextround"
         android:ems="10"
         android:fontFamily="@font/open_sans"
-        android:hint="Username"
+        android:hint="@string/username"
         android:padding="10dp" />
 
 
@@ -40,7 +41,7 @@
         android:background="@drawable/edittextround"
         android:ems="10"
         android:fontFamily="@font/open_sans"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:padding="10dp" />
 
@@ -52,9 +53,9 @@
         android:layout_weight="1"
         android:textColor="@color/text_color_2"
         android:backgroundTint="@color/blue"
-        android:text="Log In"
+        android:text="@string/log_in"
         android:textAllCaps="false"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btnSignup"
@@ -63,8 +64,8 @@
         android:layout_weight="1"
         android:backgroundTint="@color/green"
         android:textColor="@color/text_color_2"
-        android:text="Sign Up"
+        android:text="@string/sign_up"
         android:textAllCaps="false"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
 </LinearLayout>

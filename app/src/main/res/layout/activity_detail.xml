@@ -28,7 +28,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/open_sans_semibold"
-            android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textSize="18sp"
             tools:text="username" />
@@ -63,12 +62,10 @@
             android:id="@+id/tvLikesCount"
             android:layout_width="20dp"
             android:layout_height="25dp"
-            android:layout_alignTop="@+id/btnLike"
             android:textColor="@android:color/black"
             android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/btnLike"
             android:fontFamily="@font/open_sans"
-            android:textSize="20dp"
+            android:textSize="20sp"
             tools:text="0" />
     </LinearLayout>
 
@@ -105,13 +102,14 @@
 
     <EditText
         android:id="@+id/etComment"
+        android:inputType="text"
         android:layout_width="250dp"
         android:layout_marginStart="10dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rvComments"
         android:layout_alignTop="@+id/btnComment"
         android:fontFamily="@font/open_sans"
-        android:hint="Write a comment" />
+        android:hint="@string/write_a_comment" />
 
     <Button
         android:id="@+id/btnComment"
@@ -124,7 +122,7 @@
         android:backgroundTint="@color/blue"
         android:fontFamily="@font/open_sans_semibold"
         android:textColor="@color/text_color_2"
-        android:text="Post"
+        android:text="@string/post"
         android:textAllCaps="false" />
 
 
